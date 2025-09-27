@@ -4,14 +4,14 @@ const app = express();
 
 app.use(express.json());
 
-// Routes
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tasks', require('./routes/tasks'));
 
-// simple health
+
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// error handler
+
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
