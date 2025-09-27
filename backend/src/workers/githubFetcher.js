@@ -1,4 +1,4 @@
-// Mock GitHub fetcher (insert demo data)
+
 const db = require('../db');
 
 async function fetchGitHubMock() {
