@@ -1,19 +1,26 @@
-// run with: npm run migrate
-require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { Pool } = require('pg');
+const db = require('../src/db');
+require('dotenv').config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-(async () => {
+async function runMigrations() {
   try {
-    const sql = fs.readFileSync(path.join(__dirname, 'schema.sql')).toString();
-    await pool.query(sql);
-    console.log('Migrations applied.');
+    // List all .sql files in migrations folder
+    const migrationsDir = __dirname;
+    const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
+
+    for (const file of files) {
+      const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+      console.log(`Running migration: ${file}`);
+      await db.query(sql);
+    }
+
+    console.log('✅ All migrations applied');
+    process.exit(0);
   } catch (err) {
     console.error('Migration failed:', err);
     process.exit(1);
-  } finally {
-    await pool.end();
   }
-})();
+}
+
+runMigrations();
