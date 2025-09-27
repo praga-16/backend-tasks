@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
-// helper to parse cursor like "2025-09-26T18:40:00.000Z|1234"
 function parseCursor(cursor) {
   if (!cursor) return null;
   const parts = cursor.split('|');
@@ -11,7 +10,6 @@ function parseCursor(cursor) {
   return { created_at: parts[0], task_id: parseInt(parts[1], 10) };
 }
 
-// create task
 router.post('/', requireAuth, async (req, res, next) => {
   try {
     const { title, description, assigned_user_id, priority = 'medium', due_date } = req.body;
@@ -24,7 +22,7 @@ router.post('/', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// get one task
+
 router.get('/:id', requireAuth, async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -36,7 +34,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// list with filters & keyset pagination (cursor)
+
 router.get('/', requireAuth, async (req, res, next) => {
   try {
     const { status, priority, due_before, limit = 20, cursor } = req.query;
@@ -48,7 +46,6 @@ router.get('/', requireAuth, async (req, res, next) => {
     if (priority) { params.push(priority); where.push(`priority = $${params.length}`); }
     if (due_before) { params.push(new Date(due_before)); where.push(`due_date <= $${params.length}`); }
 
-    // cursor condition
     if (parsed) {
       params.push(parsed.created_at);
       params.push(parsed.task_id);
@@ -75,7 +72,7 @@ router.get('/', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// update task (optimistic locking)
+
 router.put('/:id', requireAuth, async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -90,7 +87,7 @@ router.put('/:id', requireAuth, async (req, res, next) => {
 
     if (sets.length === 0) return res.status(400).json({ error: 'Nothing to update' });
 
-    // add version increment and updated_at
+   
     params.push(id);
     params.push(expected_version);
 
@@ -106,7 +103,7 @@ router.put('/:id', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// soft delete
+
 router.delete('/:id', requireAuth, async (req, res, next) => {
   try {
     const { id } = req.params;
