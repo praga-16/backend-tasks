@@ -3,13 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
-/**
- * --------------------------------
- * GITHUB ANALYTICS
- * --------------------------------
- */
 
-// Top 5 GitHub issues by comment count
 router.get('/github/top-issues', requireAuth, async (req, res, next) => {
   try {
     const { limit = 5 } = req.query;
@@ -25,7 +19,6 @@ router.get('/github/top-issues', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// Author with the most GitHub issues
 router.get('/github/top-author', requireAuth, async (req, res, next) => {
   try {
     const q = `
@@ -40,7 +33,7 @@ router.get('/github/top-author', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// Repo with the most open issues
+
 router.get('/github/top-repo', requireAuth, async (req, res, next) => {
   try {
     const q = `
@@ -56,13 +49,7 @@ router.get('/github/top-repo', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-/**
- * --------------------------------
- * REDDIT ANALYTICS
- * --------------------------------
- */
 
-// Top 5 Reddit posts by upvotes
 router.get('/reddit/top-posts', requireAuth, async (req, res, next) => {
   try {
     const { limit = 5 } = req.query;
@@ -77,7 +64,7 @@ router.get('/reddit/top-posts', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// Reddit author with the highest total upvotes
+
 router.get('/reddit/top-author', requireAuth, async (req, res, next) => {
   try {
     const q = `
