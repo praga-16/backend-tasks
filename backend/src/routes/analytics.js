@@ -3,15 +3,11 @@ const router = express.Router();
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
-/**
- * GET /api/analytics/leaderboard?period=30d&limit=10
- * Returns top users by completed tasks in given period.
- */
 router.get('/leaderboard', requireAuth, async (req, res, next) => {
   try {
     const { period = '30d', limit = 10 } = req.query;
 
-    // parse period like '30d', '7d'
+
     const match = /^(\d+)d$/.exec(period);
     const days = match ? parseInt(match[1], 10) : 30;
 
@@ -31,10 +27,7 @@ router.get('/leaderboard', requireAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-/**
- * GET /api/analytics/task-stats?from=2025-09-01&to=2025-09-26&group_by=day
- * Returns task counts created vs completed grouped by day/month.
- */
+
 router.get('/task-stats', requireAuth, async (req, res, next) => {
   try {
     const { from, to, group_by = 'day' } = req.query;
@@ -66,7 +59,7 @@ router.get('/task-stats', requireAuth, async (req, res, next) => {
       db.query(completedQ, [from, to])
     ]);
 
-    // merge results
+    
     const map = {};
     createdRes.rows.forEach(r => {
       map[r.period] = { date: r.period, created: parseInt(r.created, 10), completed: 0 };
