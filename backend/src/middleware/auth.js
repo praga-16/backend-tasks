@@ -6,7 +6,7 @@ function requireAuth(req, res, next) {
   const token = h.split(' ')[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = payload; // contains at least user_id and email
+    req.user = payload; 
     return next();
   } catch (e) {
     return res.status(401).json({ error: 'Invalid/expired token' });
