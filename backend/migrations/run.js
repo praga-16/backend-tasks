@@ -5,7 +5,7 @@ require('dotenv').config();
 
 async function runMigrations() {
   try {
-    // List all .sql files in migrations folder
+
     const migrationsDir = __dirname;
     const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
 
